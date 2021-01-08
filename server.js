@@ -26,7 +26,7 @@ const every = (sec) => {
 	let m = date.getMinutes();
 	let s = date.getSeconds();
 	arr.map((ele) => {
-		// Model.create({ element: ele, intervalTime: sec }); // To save the element in DB along with timestamp (Declared in model)
+		Model.create({ element: ele, intervalTime: sec }); // To save the element in DB along with timestamp (Declared in model)
 		console.log(`Running every ${sec} seconds with ${ele} started at ${h}:${m}:${s}`);
 	});
 };
