@@ -14,10 +14,10 @@ const app = express();
 let arr = ['A', 'B', 'C', 'D', 'E'];
 
 // Need to define the time range here in our case (9:30 - 16-30)
-let startHour = 9,
-	startMin = 30;
-let endHour = 16,
-	endMin = 30;
+let startHour = 18,
+	startMin = 37;
+let endHour = 18,
+	endMin = 39;
 
 // Function to store details in the DB
 const every = (sec) => {
@@ -26,7 +26,7 @@ const every = (sec) => {
 	let m = date.getMinutes();
 	let s = date.getSeconds();
 	arr.map((ele) => {
-		Model.create({ element: ele, intervalTime: sec }); // To save the element in DB along with timestamp (Declared in model)
+		// Model.create({ element: ele, intervalTime: sec }); // To save the element in DB along with timestamp (Declared in model)
 		console.log(`Running every ${sec} seconds with ${ele} started at ${h}:${m}:${s}`);
 	});
 };
@@ -76,6 +76,7 @@ let buffer60 = cron.schedule(
 let startRule = new schedule.RecurrenceRule();
 startRule.hour = startHour;
 startRule.minute = startMin;
+startRule.second = 1;
 
 // This 10 seconds timer will run from the start time and ends when the specified duration completes
 schedule.scheduleJob(startRule, function () {
@@ -90,6 +91,7 @@ schedule.scheduleJob(startRule, function () {
 let endRule = new schedule.RecurrenceRule();
 endRule.hour = endHour;
 endRule.minute = endMin;
+endRule.second = 1;
 
 // This 60 seconds will run and (10seconds timer will stop) after the time duration which we specified
 schedule.scheduleJob(endRule, function () {
@@ -105,8 +107,8 @@ setImmediate(() => {
 	let date = new Date();
 	let h = date.getHours();
 	let m = date.getMinutes();
-	if (h >= 9 && h <= 16) {
-		if ((h === 9 && m <= 30) || (h == 16 && m > 30)) {
+	if (h >= startHour && h <= endHour) {
+		if ((h === startHour && m <= startMin) || (h == endHour && m > endMin)) {
 			console.log('Buffer mode');
 			buffer60.start();
 			buffer10.stop();
